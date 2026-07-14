@@ -49,7 +49,15 @@ Form `POST /api/waitlist` endpoint'ine gönderilir.
 | `MAIL_FROM` | `Driftline <hello@driftline.com>` |
 | `WAITLIST_NOTIFY_EMAIL` | `you@example.com` |
 
-`driftline.com` Resend'de doğrulanmalı. [resend.com/domains](https://resend.com/domains) → Add domain → Cloudflare DNS kayıtlarını ekle → Verify.
+`driftline.com` Resend'de eklendi (physik567@gmail.com hesabı). Cloudflare DNS'e şu kayıtları ekle:
+
+| Tip | Ad | Değer |
+|-----|-----|-------|
+| TXT | `resend._domainkey` | `p=MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQDC0fM9Ys3ROw4Dlt10MKZHqS/2mkbptrK7gpChJQp1oXGhjpjs3ha7wG77sx674m7BEroZliHttn23PhN6otwx0XEHpmdJIzeifAbTBWxbDDEjHTCWsx0BSjhMzYUEinwjZJqxyY8/ZYaysAUONp+3QsaPOF/KcgarR5PW7dVP2wIDAQAB` |
+| MX | `send` | `feedback-smtp.eu-west-1.amazonses.com` (priority 10) |
+| TXT | `send` | `v=spf1 include:amazonses.com ~all` |
+
+Sonra [resend.com/domains](https://resend.com/domains) → Verify.
 
 ```bash
 curl -X POST https://driftline-henna.vercel.app/api/waitlist \
