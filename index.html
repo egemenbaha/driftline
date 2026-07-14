@@ -192,6 +192,43 @@
     display:flex; justify-content:space-between; flex-wrap:wrap; gap:24px; font-size:13px; opacity:0.6;
   }
   footer .flogo{font-family:'Fraunces',serif; font-style:italic; opacity:1; font-size:16px;}
+
+  /* ---------- WAITLIST ---------- */
+  .signup-grid{
+    display:grid; grid-template-columns:1fr 1.05fr; gap:56px; align-items:start; margin-top:56px;
+  }
+  @media (max-width:900px){ .signup-grid{grid-template-columns:1fr; gap:36px;} }
+  .signup-form{
+    background:var(--ink-2); border:1px solid var(--line); border-radius:22px; padding:34px;
+  }
+  .field{margin-bottom:18px;}
+  .field label{
+    display:block; font-size:13px; font-weight:500; margin-bottom:8px; opacity:0.85;
+  }
+  .field input, .field select{
+    width:100%; background:var(--ink); border:1px solid var(--line); border-radius:12px;
+    padding:12px 14px; color:var(--paper); font-family:'Inter',sans-serif; font-size:15px;
+    outline:none; transition:border-color .2s, box-shadow .2s;
+  }
+  .field input:focus, .field select:focus{
+    border-color:rgba(255,90,70,0.55); box-shadow:0 0 0 3px rgba(255,90,70,0.12);
+  }
+  .field select{appearance:none; cursor:pointer;}
+  .field input[aria-invalid="true"], .field select[aria-invalid="true"]{border-color:#ff8a7a;}
+  .field-row{display:grid; grid-template-columns:1fr 1fr; gap:14px;}
+  @media (max-width:620px){ .field-row{grid-template-columns:1fr;} }
+  .consent{
+    display:flex; gap:12px; align-items:flex-start; font-size:13px; line-height:1.55; opacity:0.78;
+    margin:8px 0 22px;
+  }
+  .consent input{width:16px; height:16px; margin-top:2px; flex:none; accent-color:var(--coral);}
+  .form-msg{
+    font-size:14px; line-height:1.55; margin-top:14px; min-height:1.4em;
+  }
+  .form-msg.ok{color:var(--sage);}
+  .form-msg.err{color:#ff8a7a;}
+  .hp{position:absolute; left:-9999px; opacity:0; pointer-events:none;}
+  button.cta[disabled]{opacity:0.6; cursor:not-allowed; transform:none; box-shadow:none;}
 </style>
 </head>
 <body>
@@ -206,10 +243,11 @@
       <li><a href="#signals">Ürün</a></li>
       <li><a href="#steps">Nasıl çalışır</a></li>
       <li><a href="#pricing">Fiyat</a></li>
+      <li><a href="#signup">Kayıt</a></li>
       <li><a href="#faq">SSS</a></li>
     </ul></nav>
-    <a class="cta ghost" href="#">Giriş yap</a>
-    <a class="cta" href="#pricing">Koçunla tanış</a>
+    <a class="cta ghost" href="https://app.driftline.com/login">Giriş yap</a>
+    <a class="cta" href="#signup">Koçunla tanış</a>
   </div>
 </header>
 
@@ -224,7 +262,7 @@
       <h1>Sapmayı sen fark etmeden<br><em>koçun</em> yakalar.</h1>
       <p class="sub">Garmin, Strava, WHOOP ve Oura'daki her veriyi okur. HRV düşerken, tempo kayarken ya da uyku bozulurken planı senden önce günceller — ve sana neden değiştirdiğini yazar.</p>
       <div class="hero-ctas">
-        <a class="cta" href="#pricing">7 gün ücretsiz dene</a>
+        <a class="cta" href="#signup">7 gün ücretsiz dene</a>
         <a class="cta ghost" href="#steps">Nasıl çalıştığını gör</a>
       </div>
       <div class="signal-strip">
@@ -343,8 +381,64 @@
         <li>Atladığında ya da kötü uyuduğunda planı yeniden yazar.</li>
         <li>Yarınki seans saatine hazır şekilde saatte belirir.</li>
       </ul>
-      <a class="cta" href="#" style="width:100%; text-align:center;">Koçunla tanış →</a>
+      <a class="cta" href="#signup" style="width:100%; text-align:center;">Koçunla tanış →</a>
     </div>
+  </div>
+</section>
+
+<section id="signup">
+  <div class="eyebrow">Erken erişim</div>
+  <h2 class="section-title">7 gün ücretsiz dene.</h2>
+  <p class="section-sub">Kart gerekmez. Koçun seni tanımak için birkaç soru sorar; açıldığında ilk seni bilgilendiririz.</p>
+  <div class="signup-grid">
+    <div>
+      <p style="font-size:15px; line-height:1.65; opacity:0.75; margin:0 0 18px;">Waitlist'e katıl, Garmin / Strava / WHOOP / Oura bağlantısı ve WhatsApp üzerinden proaktif koçluk için erken erişim kazan.</p>
+      <div class="signal-strip" style="gap:14px;">
+        <div class="chip"><span class="dot"></span>7 gün ücretsiz</div>
+        <div class="chip"><span class="dot"></span>Kart yok</div>
+        <div class="chip"><span class="dot"></span>İstediğin an iptal</div>
+      </div>
+    </div>
+    <form id="waitlist-form" class="signup-form" novalidate>
+      <div class="field">
+        <label for="email">E-posta</label>
+        <input id="email" name="email" type="email" autocomplete="email" placeholder="sen@ornek.com" required>
+      </div>
+      <div class="field-row">
+        <div class="field">
+          <label for="sport">Spor branşı</label>
+          <select id="sport" name="sport" required>
+            <option value="">Seç</option>
+            <option value="running">Koşu</option>
+            <option value="triathlon">Triatlon</option>
+            <option value="cycling">Bisiklet</option>
+            <option value="other">Diğer</option>
+          </select>
+        </div>
+        <div class="field">
+          <label for="platform">Kullandığın platform</label>
+          <select id="platform" name="platform" required>
+            <option value="">Seç</option>
+            <option value="garmin">Garmin</option>
+            <option value="strava">Strava</option>
+            <option value="whoop">WHOOP</option>
+            <option value="oura">Oura</option>
+            <option value="multiple">Birden fazla</option>
+            <option value="other">Diğer</option>
+          </select>
+        </div>
+      </div>
+      <label class="consent">
+        <input type="checkbox" id="consent" name="consent" required>
+        <span>Kişisel verilerimin waitlist ve erken erişim bildirimleri için işlenmesini kabul ediyorum.</span>
+      </label>
+      <div class="hp" aria-hidden="true">
+        <label for="website">Website</label>
+        <input id="website" name="website" type="text" tabindex="-1" autocomplete="off">
+      </div>
+      <button class="cta" type="submit" id="waitlist-submit" style="width:100%;">Waitlist'e katıl →</button>
+      <p class="form-msg" id="form-msg" role="status" aria-live="polite"></p>
+    </form>
   </div>
 </section>
 
@@ -365,7 +459,7 @@
       <p>Hayır, tamamlayıcıdır. Yarış stratejisi ve motivasyon için insan koç vazgeçilmez; Driftline çoğu koçun her gün yapacak vakti olmadığı veri takibini üstlenir.</p>
     </details>
     <details>
-      <summary>Verim güvende mi?</summary>
+      <summary>Verin güvende mi?</summary>
       <p>Bağlantılar salt-okunur, veriler şifreli saklanır, hiçbir veri satılmaz ya da model eğitiminde kullanılmaz. İstediğin an hesabını silebilirsin.</p>
     </details>
   </div>
@@ -376,5 +470,79 @@
   <div>© 2026 driftline — dayanıklılık sporcuları için proaktif AI koç.</div>
 </footer>
 
+<script>
+(function () {
+  var form = document.getElementById("waitlist-form");
+  var msg = document.getElementById("form-msg");
+  var submitBtn = document.getElementById("waitlist-submit");
+  if (!form) return;
+
+  var apiBase = window.location.hostname.includes("github.io")
+    ? "https://driftline-henna.vercel.app"
+    : "";
+
+  function setMsg(text, type) {
+    msg.textContent = text;
+    msg.className = "form-msg" + (type ? " " + type : "");
+  }
+
+  function setInvalid(el, invalid) {
+    if (!el) return;
+    el.setAttribute("aria-invalid", invalid ? "true" : "false");
+  }
+
+  form.addEventListener("submit", async function (e) {
+    e.preventDefault();
+    setMsg("");
+
+    var email = form.email;
+    var sport = form.sport;
+    var platform = form.platform;
+    var consent = form.consent;
+
+    setInvalid(email, !email.value.trim());
+    setInvalid(sport, !sport.value);
+    setInvalid(platform, !platform.value);
+
+    if (!email.value.trim() || !sport.value || !platform.value || !consent.checked) {
+      setMsg("Lütfen tüm alanları doldur ve KVKK onayını işaretle.", "err");
+      return;
+    }
+
+    submitBtn.disabled = true;
+    submitBtn.textContent = "Gönderiliyor…";
+
+    try {
+      var res = await fetch(apiBase + "/api/waitlist", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          email: email.value.trim(),
+          sport: sport.value,
+          platform: platform.value,
+          consent: consent.checked,
+          website: form.website.value
+        })
+      });
+
+      var data = await res.json().catch(function () { return {}; });
+
+      if (!res.ok) {
+        setMsg(data.message || "Bir hata oluştu. Lütfen tekrar dene.", "err");
+        return;
+      }
+
+      setMsg(data.message || "Kaydın alındı.", "ok");
+      form.reset();
+      [email, sport, platform].forEach(function (el) { setInvalid(el, false); });
+    } catch (err) {
+      setMsg("Bağlantı hatası. Lütfen tekrar dene.", "err");
+    } finally {
+      submitBtn.disabled = false;
+      submitBtn.textContent = "Waitlist'e katıl →";
+    }
+  });
+})();
+</script>
 </body>
 </html>

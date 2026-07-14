@@ -34,9 +34,19 @@ python3 -m http.server 8080
    - `CNAME` `www` → `cname.vercel-dns.com`
 3. Vercel → driftline-app/driftline → Domains → `driftline.com` ekle
 
+## Waitlist API
+
+Form `POST /api/waitlist` endpoint'ine gönderilir. Kayıtlar Vercel Blob (`waitlist/{email}.json`) içinde saklanır.
+
+```bash
+curl -X POST https://driftline-henna.vercel.app/api/waitlist \
+  -H "Content-Type: application/json" \
+  -d '{"email":"test@example.com","sport":"running","platform":"garmin","consent":true}'
+```
+
 ## Yol haritası
 
-- [ ] Waitlist / kayıt formu
+- [x] Waitlist / kayıt formu
 - [ ] Mobil hamburger menü
 - [ ] SEO (meta, OG, sitemap)
 - [ ] Yasal sayfalar (gizlilik, şartlar, KVKK)
