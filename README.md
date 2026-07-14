@@ -8,7 +8,8 @@ Garmin, Strava, WHOOP ve Oura verisini okuyarak antrenman sapmasını sporcu far
 
 | Ortam | URL |
 |-------|-----|
-| **Production (Vercel)** | https://driftline-lovat.vercel.app |
+| **Production (Vercel)** | https://driftlinescience.com |
+| **Vercel fallback** | https://driftline-lovat.vercel.app |
 | **GitHub Pages** | https://egemenbaha.github.io/driftline/ |
 
 **Vercel hesabı:** `barutcuegemende-7462`  
@@ -65,7 +66,7 @@ Form `POST /api/waitlist` endpoint'ine gönderilir.
 Sonra [resend.com/domains](https://resend.com/domains) → Verify.
 
 ```bash
-curl -X POST https://driftline-lovat.vercel.app/api/waitlist \
+curl -X POST https://driftlinescience.com/api/waitlist \
   -H "Content-Type: application/json" \
   -d '{"email":"test@example.com","sport":"running","platform":"garmin","goal":"endurance","consent":true}'
 ```
