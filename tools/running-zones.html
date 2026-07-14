@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Running Zones — Driftline</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,600;0,9..144,700&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="tools.css">
+</head>
+<body>
+  <header class="tools-header">
+    <div class="tools-header-inner">
+      <a href="../index.html" class="tools-logo">Drift<span>line</span></a>
+      <nav class="tools-nav"><a href="index.html">Tüm Araçlar</a></nav>
+    </div>
+  </header>
+
+  <main class="tools-main">
+    <a href="index.html" class="back-link">← Tüm araçlar</a>
+    <div class="tool-page-header">
+      <h1>Running Zones</h1>
+      <p>Laktat eşiği veya 10K yarış temponuzdan 5 zonlu koşu antrenman aralıkları.</p>
+    </div>
+
+    <div class="calc-card">
+      <form id="form" class="calc-form">
+        <div class="form-group">
+          <label for="method">Hesaplama yöntemi</label>
+          <select id="method">
+            <option value="threshold">Eşik temposu (dk:sn/km)</option>
+            <option value="race10k">10K yarış süresi</option>
+          </select>
+        </div>
+        <div class="form-group" id="thresholdGroup">
+          <label for="threshold">Eşik temposu (dk:sn /km)</label>
+          <input type="text" id="threshold" placeholder="4:30" value="4:30">
+        </div>
+        <div class="form-group" id="raceGroup" style="display:none">
+          <label for="race10k">10K süresi (dk:sn)</label>
+          <input type="text" id="race10k" placeholder="42:00" value="42:00">
+        </div>
+        <button type="submit" class="btn-calc">Zonları hesapla</button>
+      </form>
+
+      <div id="results" class="results hidden">
+        <h3>Koşu zonları</h3>
+        <table class="zone-table">
+          <thead><tr><th>Zon</th><th>Ad</th><th>Tempo aralığı</th><th>Kullanım</th></tr></thead>
+          <tbody id="zoneRows"></tbody>
+        </table>
+      </div>
+    </div>
+  </main>
+
+  <footer class="tools-footer"><p>© 2026 Driftline</p></footer>
+
+  <script src="tools.js"></script>
+  <script>
+    const method = document.getElementById('method');
+    const thresholdGroup = document.getElementById('thresholdGroup');
+    const raceGroup = document.getElementById('raceGroup');
+
+    method.addEventListener('change', () => {
+      const isThreshold = method.value === 'threshold';
+      thresholdGroup.style.display = isThreshold ? '' : 'none';
+      raceGroup.style.display = isThreshold ? 'none' : '';
+    });
+
+    document.getElementById('form').addEventListener('submit', (e) => {
+      e.preventDefault();
+      let secPerKm;
+      if (method.value === 'threshold') {
+        secPerKm = parseTime(document.getElementById('threshold').value);
+      } else {
+        const t10k = parseTime(document.getElementById('race10k').value);
+        secPerKm = t10k / 10 * 1.02;
+      }
+      if (!secPerKm) return;
+
+      const zones = runningZonesFromThreshold(secPerKm);
+      document.getElementById('zoneRows').innerHTML = zones.map(z =>
+        `<tr><td>${z.zone}</td><td>${z.name}</td><td>${z.fast} – ${z.slow}</td><td>${z.use}</td></tr>`
+      ).join('');
+      document.getElementById('results').classList.remove('hidden');
+    });
+  </script>
+</body>
+</html>

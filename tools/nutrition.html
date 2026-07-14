@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Nutrition Planner — Driftline</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,600;0,9..144,700&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="tools.css">
+</head>
+<body>
+  <header class="tools-header">
+    <div class="tools-header-inner">
+      <a href="../index.html" class="tools-logo">Drift<span>line</span></a>
+      <nav class="tools-nav"><a href="index.html">Tüm Araçlar</a></nav>
+    </div>
+  </header>
+
+  <main class="tools-main">
+    <a href="index.html" class="back-link">← Tüm araçlar</a>
+    <div class="tool-page-header">
+      <h1>Nutrition Planner</h1>
+      <p>Yarış süresi ve yoğunluğuna göre karbonhidrat ve sıvı alım planı.</p>
+    </div>
+
+    <div class="calc-card">
+      <form id="form" class="calc-form">
+        <div class="form-row">
+          <div class="form-group">
+            <label for="hours">Yarış süresi (saat)</label>
+            <input type="number" id="hours" step="0.25" min="0.5" max="17" value="3" required>
+          </div>
+          <div class="form-group">
+            <label for="intensity">Yoğunluk</label>
+            <select id="intensity">
+              <option value="low">Düşük (Z1–Z2)</option>
+              <option value="med" selected>Orta (Z3)</option>
+              <option value="high">Yüksek (Z4+)</option>
+            </select>
+          </div>
+        </div>
+        <button type="submit" class="btn-calc">Plan oluştur</button>
+      </form>
+
+      <div id="results" class="results hidden">
+        <h3>Beslenme planı</h3>
+        <div class="result-grid">
+          <div class="result-item">
+            <div class="result-label">Saatlik karbonhidrat</div>
+            <div class="result-value" id="carbsHour">—</div>
+          </div>
+          <div class="result-item">
+            <div class="result-label">Toplam karbonhidrat</div>
+            <div class="result-value" id="carbsTotal">—</div>
+          </div>
+          <div class="result-item">
+            <div class="result-label">Önerilen sıvı</div>
+            <div class="result-value" id="fluid">—</div>
+          </div>
+          <div class="result-item">
+            <div class="result-label">Jel / bar önerisi</div>
+            <div class="result-value" id="gels">—</div>
+          </div>
+        </div>
+        <p class="result-note">90 g/saat üstü karbonhidrat için çift kaynaklı (glikoz + fruktoz) ürünler ve GI adaptasyonu gerekir. Sıvı ihtiyacı terleme hızınıza göre ayarlayın.</p>
+      </div>
+    </div>
+  </main>
+
+  <footer class="tools-footer"><p>© 2026 Driftline</p></footer>
+
+  <script src="tools.js"></script>
+  <script>
+    document.getElementById('form').addEventListener('submit', (e) => {
+      e.preventDefault();
+      const hours = parseFloat(document.getElementById('hours').value);
+      const intensity = document.getElementById('intensity').value;
+      const plan = nutritionPlan(hours, intensity);
+
+      document.getElementById('carbsHour').textContent = plan.carbsPerHour + ' g/saat';
+      document.getElementById('carbsTotal').textContent = plan.total + ' g';
+      document.getElementById('fluid').textContent = (plan.fluid / 1000).toFixed(1) + ' L';
+      document.getElementById('gels').textContent = Math.ceil(plan.total / 25) + ' jel (≈25g)';
+      document.getElementById('results').classList.remove('hidden');
+    });
+  </script>
+</body>
+</html>

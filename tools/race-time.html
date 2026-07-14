@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Race Time Predictor — Driftline</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,600;0,9..144,700&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="tools.css">
+</head>
+<body>
+  <header class="tools-header">
+    <div class="tools-header-inner">
+      <a href="../index.html" class="tools-logo">Drift<span>line</span></a>
+      <nav class="tools-nav">
+        <a href="index.html">Tüm Araçlar</a>
+        <a href="../index.html#signup">Kayıt</a>
+      </nav>
+    </div>
+  </header>
+
+  <main class="tools-main">
+    <a href="index.html" class="back-link">← Tüm araçlar</a>
+    <div class="tool-page-header">
+      <h1>Race Time Predictor</h1>
+      <p>Riegel formülü (T₂ = T₁ × (D₂/D₁)^1.06) ile bilinen bir performanstan diğer mesafeler için tahmini süre.</p>
+    </div>
+
+    <div class="calc-card">
+      <form id="form" class="calc-form">
+        <div class="form-group">
+          <label for="knownDist">Bilinen mesafe (km)</label>
+          <select id="knownDist">
+            <option value="5">5K</option>
+            <option value="10" selected>10K</option>
+            <option value="21.0975">Yarı Maraton</option>
+            <option value="42.195">Maraton</option>
+            <option value="custom">Özel</option>
+          </select>
+        </div>
+        <div class="form-group" id="customKnownGroup" style="display:none">
+          <label for="customKnown">Özel mesafe (km)</label>
+          <input type="number" id="customKnown" step="0.1" min="0.1" value="10">
+        </div>
+        <div class="form-group">
+          <label for="knownTime">Bilinen süre (ss:dd veya ss:dd:dd)</label>
+          <input type="text" id="knownTime" placeholder="45:30" value="45:00" required>
+        </div>
+        <div class="form-group">
+          <label for="targetDist">Hedef mesafe (km)</label>
+          <select id="targetDist">
+            <option value="5">5K</option>
+            <option value="10">10K</option>
+            <option value="21.0975" selected>Yarı Maraton</option>
+            <option value="42.195">Maraton</option>
+            <option value="custom">Özel</option>
+          </select>
+        </div>
+        <div class="form-group" id="customTargetGroup" style="display:none">
+          <label for="customTarget">Özel hedef (km)</label>
+          <input type="number" id="customTarget" step="0.1" min="0.1" value="21.1">
+        </div>
+        <button type="submit" class="btn-calc">Tahmin et</button>
+      </form>
+
+      <div id="results" class="results hidden">
+        <h3>Tahmini süre</h3>
+        <div class="result-highlight" id="predictedTime">—</div>
+        <div class="result-grid">
+          <div class="result-item">
+            <div class="result-label">Tempo</div>
+            <div class="result-value" id="predictedPace">—</div>
+          </div>
+          <div class="result-item">
+            <div class="result-label">Mesafe</div>
+            <div class="result-value" id="targetLabel">—</div>
+          </div>
+        </div>
+        <p class="result-note">Tahminler eşit çaba varsayımına dayanır. Arazi, hava ve yarış deneyimi sonucu değiştirir.</p>
+      </div>
+    </div>
+  </main>
+
+  <footer class="tools-footer">
+    <p>© 2026 Driftline · <a href="../privacy.html">Gizlilik</a></p>
+  </footer>
+
+  <script src="tools.js"></script>
+  <script>
+    const knownDist = document.getElementById('knownDist');
+    const targetDist = document.getElementById('targetDist');
+    const customKnownGroup = document.getElementById('customKnownGroup');
+    const customTargetGroup = document.getElementById('customTargetGroup');
+
+    knownDist.addEventListener('change', () => {
+      customKnownGroup.style.display = knownDist.value === 'custom' ? '' : 'none';
+    });
+    targetDist.addEventListener('change', () => {
+      customTargetGroup.style.display = targetDist.value === 'custom' ? '' : 'none';
+    });
+
+    document.getElementById('form').addEventListener('submit', (e) => {
+      e.preventDefault();
+      const d1 = knownDist.value === 'custom' ? parseFloat(document.getElementById('customKnown').value) : parseFloat(knownDist.value);
+      const d2 = targetDist.value === 'custom' ? parseFloat(document.getElementById('customTarget').value) : parseFloat(targetDist.value);
+      const t1 = parseTime(document.getElementById('knownTime').value);
+      if (!t1 || !d1 || !d2) return;
+
+      const predicted = riegelPredict(t1, d1, d2);
+      document.getElementById('predictedTime').textContent = formatTime(predicted);
+      document.getElementById('predictedPace').textContent = formatPace(predicted / d2) + ' /km';
+      document.getElementById('targetLabel').textContent = d2.toFixed(1) + ' km';
+      document.getElementById('results').classList.remove('hidden');
+    });
+  </script>
+</body>
+</html>

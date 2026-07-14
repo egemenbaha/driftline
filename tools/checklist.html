@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Race Day Checklist — Driftline</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,600;0,9..144,700&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="tools.css">
+</head>
+<body>
+  <header class="tools-header">
+    <div class="tools-header-inner">
+      <a href="../index.html" class="tools-logo">Drift<span>line</span></a>
+      <nav class="tools-nav"><a href="index.html">Tüm Araçlar</a></nav>
+    </div>
+  </header>
+
+  <main class="tools-main">
+    <a href="index.html" class="back-link">← Tüm araçlar</a>
+    <div class="tool-page-header">
+      <h1>Race Day Checklist</h1>
+      <p>Yarış günü hazırlık listesi — işaretleriniz tarayıcıda kaydedilir.</p>
+    </div>
+
+    <div class="calc-card">
+      <div class="form-group">
+        <label for="raceType">Yarış türü</label>
+        <select id="raceType">
+          <option value="tri">Triatlon</option>
+          <option value="run">Koşu</option>
+          <option value="bike">Bisiklet</option>
+        </select>
+      </div>
+      <button type="button" class="btn-calc" id="resetBtn" style="margin-bottom:20px">Listeyi sıfırla</button>
+      <ul class="checklist" id="checklist"></ul>
+      <p class="result-note" id="progress">0 / 0 tamamlandı</p>
+    </div>
+  </main>
+
+  <footer class="tools-footer"><p>© 2026 Driftline</p></footer>
+
+  <script>
+    const ITEMS = {
+      tri: [
+        'Gece öncesi çantayı hazırla',
+        'Yüzme: mayo, bone, gözlük, wetsuit',
+        'Geçiş 1: havlu, ayakkabı, şapka, güneş kremi',
+        'Bisiklet: kask, şişe/hidrasyon, yedek lastik, CO₂',
+        'Geçiş 2: koşu ayakkabısı, şapka, numara kemeri',
+        'Beslenme: jeller, barlar, elektrolit',
+        'Teknik: saat/GPS, nabız bandı, şişirilmiş lastikler',
+        'Sabah kahvaltısı (3–4 saat önce)',
+        'Isınma planı',
+        'Start alanı ve geçiş kurallarını kontrol et',
+      ],
+      run: [
+        'Koşu ayakkabısı ve yedek çorap',
+        'Start numarası ve güvenlik pimleri',
+        'Saat / GPS',
+        'Hafif katmanlar (soğuk hava)',
+        'Jel / sıvı planı',
+        'Sabah kahvaltısı',
+        'Tuvalet ve ısınma',
+        'Start koridoru ve tempo planı',
+      ],
+      bike: [
+        'Bisiklet kontrolü (fren, vites, lastik)',
+        'Kask ve gözlük',
+        'Hidrasyon ve beslenme',
+        'Yedek lastik / CO₂',
+        'Saat / güç metre',
+        'Start öncesi ısınma turu',
+        'Kritik bölüm tempo planı',
+      ],
+    };
+
+    const STORAGE_KEY = 'driftline-checklist';
+    const raceType = document.getElementById('raceType');
+    const list = document.getElementById('checklist');
+    const progress = document.getElementById('progress');
+
+    function loadState() {
+      try { return JSON.parse(localStorage.getItem(STORAGE_KEY)) || {}; }
+      catch { return {}; }
+    }
+
+    function saveState(state) {
+      localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
+    }
+
+    function render() {
+      const type = raceType.value;
+      const items = ITEMS[type];
+      const state = loadState();
+      const key = type;
+      const checked = state[key] || {};
+
+      list.innerHTML = items.map((text, i) => {
+        const id = `${type}-${i}`;
+        const done = !!checked[id];
+        return `<li><input type="checkbox" id="${id}" ${done ? 'checked' : ''}><label for="${id}">${text}</label></li>`;
+      }).join('');
+
+      list.querySelectorAll('input').forEach((cb) => {
+        cb.addEventListener('change', () => {
+          const s = loadState();
+          s[key] = s[key] || {};
+          s[key][cb.id] = cb.checked;
+          saveState(s);
+          updateProgress();
+        });
+      });
+      updateProgress();
+    }
+
+    function updateProgress() {
+      const boxes = list.querySelectorAll('input');
+      const done = [...boxes].filter(b => b.checked).length;
+      progress.textContent = `${done} / ${boxes.length} tamamlandı`;
+    }
+
+    raceType.addEventListener('change', render);
+    document.getElementById('resetBtn').addEventListener('click', () => {
+      const s = loadState();
+      delete s[raceType.value];
+      saveState(s);
+      render();
+    });
+
+    render();
+  </script>
+</body>
+</html>

@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Volume Planner — Driftline</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,600;0,9..144,700&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="tools.css">
+</head>
+<body>
+  <header class="tools-header">
+    <div class="tools-header-inner">
+      <a href="../index.html" class="tools-logo">Drift<span>line</span></a>
+      <nav class="tools-nav"><a href="index.html">Tüm Araçlar</a></nav>
+    </div>
+  </header>
+
+  <main class="tools-main">
+    <a href="index.html" class="back-link">← Tüm araçlar</a>
+    <div class="tool-page-header">
+      <h1>Volume Planner</h1>
+      <p>Haftalık toplam antrenman süresini yüzme, bisiklet ve koşuya dağıtın.</p>
+    </div>
+
+    <div class="calc-card">
+      <form id="form" class="calc-form">
+        <div class="form-group">
+          <label for="totalHours">Haftalık toplam süre (saat)</label>
+          <input type="number" id="totalHours" step="0.5" min="3" max="30" value="10" required>
+        </div>
+        <div class="form-group">
+          <label for="preset">Dağılım şablonu</label>
+          <select id="preset">
+            <option value="sprint">Sprint triatlon (15/45/40)</option>
+            <option value="olympic" selected>Olimpik triatlon (20/50/30)</option>
+            <option value="half">Half Ironman (15/55/30)</option>
+            <option value="ironman">Ironman (10/60/30)</option>
+            <option value="custom">Özel</option>
+          </select>
+        </div>
+        <div class="form-row" id="customRow" style="display:none">
+          <div class="form-group">
+            <label for="swimPct">Yüzme %</label>
+            <input type="number" id="swimPct" min="5" max="40" value="20">
+          </div>
+          <div class="form-group">
+            <label for="bikePct">Bisiklet %</label>
+            <input type="number" id="bikePct" min="30" max="70" value="50">
+          </div>
+          <div class="form-group">
+            <label for="runPct">Koşu %</label>
+            <input type="number" id="runPct" min="15" max="50" value="30">
+          </div>
+        </div>
+        <button type="submit" class="btn-calc">Dağılımı hesapla</button>
+      </form>
+
+      <div id="results" class="results hidden">
+        <div class="result-grid">
+          <div class="result-item">
+            <div class="result-label">🏊 Yüzme</div>
+            <div class="result-value" id="swimH">—</div>
+          </div>
+          <div class="result-item">
+            <div class="result-label">🚴 Bisiklet</div>
+            <div class="result-value" id="bikeH">—</div>
+          </div>
+          <div class="result-item">
+            <div class="result-label">🏃 Koşu</div>
+            <div class="result-value" id="runH">—</div>
+          </div>
+          <div class="result-item">
+            <div class="result-label">Günlük ortalama (6 gün)</div>
+            <div class="result-value" id="daily">—</div>
+          </div>
+        </div>
+        <p class="result-note">Dağılım genel rehberdir. Zayıf disiplinlere +%5 ekleyip güçlü disiplinden çıkarabilirsiniz.</p>
+      </div>
+    </div>
+  </main>
+
+  <footer class="tools-footer"><p>© 2026 Driftline</p></footer>
+
+  <script>
+    const PRESETS = {
+      sprint: [15, 45, 40],
+      olympic: [20, 50, 30],
+      half: [15, 55, 30],
+      ironman: [10, 60, 30],
+    };
+
+    document.getElementById('preset').addEventListener('change', (e) => {
+      document.getElementById('customRow').style.display = e.target.value === 'custom' ? '' : 'none';
+    });
+
+    document.getElementById('form').addEventListener('submit', (e) => {
+      e.preventDefault();
+      const total = parseFloat(document.getElementById('totalHours').value);
+      const preset = document.getElementById('preset').value;
+      let swim, bike, run;
+
+      if (preset === 'custom') {
+        swim = parseFloat(document.getElementById('swimPct').value);
+        bike = parseFloat(document.getElementById('bikePct').value);
+        run = parseFloat(document.getElementById('runPct').value);
+        const sum = swim + bike + run;
+        if (Math.abs(sum - 100) > 1) {
+          alert('Yüzdeler toplamı 100 olmalıdır.');
+          return;
+        }
+      } else {
+        [swim, bike, run] = PRESETS[preset];
+      }
+
+      const fmt = (pct) => (total * pct / 100).toFixed(1) + ' saat';
+      document.getElementById('swimH').textContent = fmt(swim) + ` (${swim}%)`;
+      document.getElementById('bikeH').textContent = fmt(bike) + ` (${bike}%)`;
+      document.getElementById('runH').textContent = fmt(run) + ` (${run}%)`;
+      document.getElementById('daily').textContent = (total / 6).toFixed(1) + ' saat/gün';
+      document.getElementById('results').classList.remove('hidden');
+    });
+  </script>
+</body>
+</html>

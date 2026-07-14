@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Race Weight — Driftline</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,600;0,9..144,700&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="tools.css">
+</head>
+<body>
+  <header class="tools-header">
+    <div class="tools-header-inner">
+      <a href="../index.html" class="tools-logo">Drift<span>line</span></a>
+      <nav class="tools-nav"><a href="index.html">Tüm Araçlar</a></nav>
+    </div>
+  </header>
+
+  <main class="tools-main">
+    <a href="index.html" class="back-link">← Tüm araçlar</a>
+    <div class="tool-page-header">
+      <h1>Race Weight</h1>
+      <p>Boy ve cinsiyete göre yarış kilosu aralığı ve güvenli kilo verme hızı.</p>
+    </div>
+
+    <div class="calc-card">
+      <form id="form" class="calc-form">
+        <div class="form-row">
+          <div class="form-group">
+            <label for="height">Boy (cm)</label>
+            <input type="number" id="height" min="140" max="220" value="175" required>
+          </div>
+          <div class="form-group">
+            <label for="sex">Cinsiyet</label>
+            <select id="sex">
+              <option value="m">Erkek</option>
+              <option value="f">Kadın</option>
+            </select>
+          </div>
+        </div>
+        <div class="form-group">
+          <label for="current">Mevcut kilo (kg)</label>
+          <input type="number" id="current" step="0.1" min="40" max="150" value="78" required>
+        </div>
+        <div class="form-group">
+          <label for="weeks">Yarışa kalan hafta</label>
+          <input type="number" id="weeks" min="1" max="52" value="12" required>
+        </div>
+        <button type="submit" class="btn-calc">Hesapla</button>
+      </form>
+
+      <div id="results" class="results hidden">
+        <h3>Yarış kilosu aralığı</h3>
+        <div class="result-grid">
+          <div class="result-item">
+            <div class="result-label">Alt sınır</div>
+            <div class="result-value" id="minW">—</div>
+          </div>
+          <div class="result-item">
+            <div class="result-label">Hedef</div>
+            <div class="result-value" id="targetW">—</div>
+          </div>
+          <div class="result-item">
+            <div class="result-label">Üst sınır</div>
+            <div class="result-value" id="maxW">—</div>
+          </div>
+          <div class="result-item">
+            <div class="result-label">Güvenli haftalık kayıp</div>
+            <div class="result-value" id="safeLoss">—</div>
+          </div>
+        </div>
+        <p class="result-note" id="advice">—</p>
+      </div>
+    </div>
+  </main>
+
+  <footer class="tools-footer"><p>© 2026 Driftline</p></footer>
+
+  <script src="tools.js"></script>
+  <script>
+    document.getElementById('form').addEventListener('submit', (e) => {
+      e.preventDefault();
+      const height = parseFloat(document.getElementById('height').value);
+      const sex = document.getElementById('sex').value;
+      const current = parseFloat(document.getElementById('current').value);
+      const weeks = parseInt(document.getElementById('weeks').value, 10);
+      const rw = raceWeight(height, sex);
+
+      const safePerWeek = 0.5;
+      const maxLoss = safePerWeek * weeks;
+      const diff = current - rw.target;
+
+      document.getElementById('minW').textContent = rw.min + ' kg';
+      document.getElementById('targetW').textContent = rw.target + ' kg';
+      document.getElementById('maxW').textContent = rw.max + ' kg';
+      document.getElementById('safeLoss').textContent = safePerWeek + ' kg/hafta';
+
+      let advice = '';
+      if (current <= rw.target) {
+        advice = 'Mevcut kilonuz hedef aralıkta veya altında. Performans için yeterli enerji alımına odaklanın.';
+      } else if (diff <= maxLoss) {
+        advice = `${diff.toFixed(1)} kg vererek hedefe ulaşabilirsiniz. Haftada en fazla 0,5 kg kayıp güvenli kabul edilir.`;
+      } else {
+        advice = `Hedefe ${diff.toFixed(1)} kg uzaktasınız; ${weeks} haftada güvenli aralıkta sadece ${maxLoss.toFixed(1)} kg verilebilir. Uzun vadeli hedef olarak düşünün.`;
+      }
+      document.getElementById('advice').textContent = advice;
+      document.getElementById('results').classList.remove('hidden');
+    });
+  </script>
+</body>
+</html>

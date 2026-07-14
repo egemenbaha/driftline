@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Sweat Rate — Driftline</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,600;0,9..144,700&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="tools.css">
+</head>
+<body>
+  <header class="tools-header">
+    <div class="tools-header-inner">
+      <a href="../index.html" class="tools-logo">Drift<span>line</span></a>
+      <nav class="tools-nav"><a href="index.html">Tüm Araçlar</a></nav>
+    </div>
+  </header>
+
+  <main class="tools-main">
+    <a href="index.html" class="back-link">← Tüm araçlar</a>
+    <div class="tool-page-header">
+      <h1>Sweat Rate</h1>
+      <p>Antrenman öncesi/sonrası tartı ve sıvı alımından terleme hızı hesabı.</p>
+    </div>
+
+    <div class="calc-card">
+      <form id="form" class="calc-form">
+        <div class="form-row">
+          <div class="form-group">
+            <label for="preKg">Öncesi kilo (kg)</label>
+            <input type="number" id="preKg" step="0.1" min="40" max="150" value="75.0" required>
+          </div>
+          <div class="form-group">
+            <label for="postKg">Sonrası kilo (kg)</label>
+            <input type="number" id="postKg" step="0.1" min="40" max="150" value="74.2" required>
+          </div>
+        </div>
+        <div class="form-row">
+          <div class="form-group">
+            <label for="fluidL">Alınan sıvı (litre)</label>
+            <input type="number" id="fluidL" step="0.1" min="0" max="10" value="0.5" required>
+          </div>
+          <div class="form-group">
+            <label for="duration">Süre (dakika)</label>
+            <input type="number" id="duration" min="15" max="360" value="60" required>
+          </div>
+        </div>
+        <button type="submit" class="btn-calc">Terleme hızını hesapla</button>
+      </form>
+
+      <div id="results" class="results hidden">
+        <h3>Terleme hızı</h3>
+        <div class="result-highlight" id="rate">—</div>
+        <div class="result-grid">
+          <div class="result-item">
+            <div class="result-label">Toplam sıvı kaybı</div>
+            <div class="result-value" id="totalLoss">—</div>
+          </div>
+          <div class="result-item">
+            <div class="result-label">Önerilen saatlik alım</div>
+            <div class="result-value" id="intake">—</div>
+          </div>
+        </div>
+        <p class="result-note">Kilo kaybının %2'sinden fazlasını telafi etmeyin — aşırı içmek hiponatremiye yol açabilir. Farklı sıcaklık ve yoğunluklarda tekrar ölçün.</p>
+      </div>
+    </div>
+  </main>
+
+  <footer class="tools-footer"><p>© 2026 Driftline</p></footer>
+
+  <script src="tools.js"></script>
+  <script>
+    document.getElementById('form').addEventListener('submit', (e) => {
+      e.preventDefault();
+      const pre = parseFloat(document.getElementById('preKg').value);
+      const post = parseFloat(document.getElementById('postKg').value);
+      const fluid = parseFloat(document.getElementById('fluidL').value);
+      const duration = parseFloat(document.getElementById('duration').value);
+
+      const rateLph = sweatRate(pre, post, fluid, duration);
+      const totalLoss = pre - post + fluid;
+
+      document.getElementById('rate').textContent = rateLph.toFixed(2) + ' L/saat';
+      document.getElementById('totalLoss').textContent = (totalLoss * 1000).toFixed(0) + ' ml';
+      document.getElementById('intake').textContent = Math.max(0.4, rateLph * 0.8).toFixed(1) + ' L/saat';
+      document.getElementById('results').classList.remove('hidden');
+    });
+  </script>
+</body>
+</html>

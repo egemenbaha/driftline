@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Race Split Calculator — Driftline</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,600;0,9..144,700&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="tools.css">
+</head>
+<body>
+  <header class="tools-header">
+    <div class="tools-header-inner">
+      <a href="../index.html" class="tools-logo">Drift<span>line</span></a>
+      <nav class="tools-nav"><a href="index.html">Tüm Araçlar</a></nav>
+    </div>
+  </header>
+
+  <main class="tools-main">
+    <a href="index.html" class="back-link">← Tüm araçlar</a>
+    <div class="tool-page-header">
+      <h1>Race Split Calculator</h1>
+      <p>Hedef süreye göre eşit km veya mil aralıklı yarış bölücüleri.</p>
+    </div>
+
+    <div class="calc-card">
+      <form id="form" class="calc-form">
+        <div class="form-row">
+          <div class="form-group">
+            <label for="distance">Mesafe (km)</label>
+            <select id="distance">
+              <option value="5">5K</option>
+              <option value="10">10K</option>
+              <option value="21.0975" selected>Yarı Maraton</option>
+              <option value="42.195">Maraton</option>
+              <option value="custom">Özel</option>
+            </select>
+          </div>
+          <div class="form-group" id="customDistGroup" style="display:none">
+            <label for="customDist">Özel mesafe (km)</label>
+            <input type="number" id="customDist" step="0.1" min="1" value="21.1">
+          </div>
+        </div>
+        <div class="form-group">
+          <label for="goalTime">Hedef süre (ss:dd veya ss:dd:dd)</label>
+          <input type="text" id="goalTime" placeholder="1:45:00" value="1:45:00" required>
+        </div>
+        <div class="form-group">
+          <label for="splitUnit">Bölücü aralığı</label>
+          <select id="splitUnit">
+            <option value="1">Her 1 km</option>
+            <option value="5">Her 5 km</option>
+            <option value="mile">Her 1 mil</option>
+          </select>
+        </div>
+        <button type="submit" class="btn-calc">Bölücüleri hesapla</button>
+      </form>
+
+      <div id="results" class="results hidden">
+        <h3>Eşit tempo bölücüleri</h3>
+        <div class="result-highlight" id="avgPace">—</div>
+        <table class="zone-table">
+          <thead><tr><th>Nokta</th><th>Kümülatif süre</th><th>Bölüm süresi</th></tr></thead>
+          <tbody id="splitRows"></tbody>
+        </table>
+      </div>
+    </div>
+  </main>
+
+  <footer class="tools-footer"><p>© 2026 Driftline</p></footer>
+
+  <script src="tools.js"></script>
+  <script>
+    document.getElementById('distance').addEventListener('change', (e) => {
+      document.getElementById('customDistGroup').style.display = e.target.value === 'custom' ? '' : 'none';
+    });
+
+    document.getElementById('form').addEventListener('submit', (e) => {
+      e.preventDefault();
+      const distSel = document.getElementById('distance').value;
+      const totalKm = distSel === 'custom' ? parseFloat(document.getElementById('customDist').value) : parseFloat(distSel);
+      const totalSec = parseTime(document.getElementById('goalTime').value);
+      const unit = document.getElementById('splitUnit').value;
+      if (!totalKm || !totalSec) return;
+
+      const secPerKm = totalSec / totalKm;
+      document.getElementById('avgPace').textContent = formatPace(secPerKm);
+
+      let intervalKm = unit === 'mile' ? 1.60934 : parseFloat(unit);
+      const rows = [];
+      let cum = 0;
+      let prev = 0;
+      for (let d = intervalKm; d <= totalKm + 0.001; d += intervalKm) {
+        cum = Math.min(d / totalKm * totalSec, totalSec);
+        const label = unit === 'mile'
+          ? (d / 1.60934).toFixed(0) + ' mil'
+          : d.toFixed(unit === '1' ? 0 : 0) + ' km';
+        rows.push(`<tr><td>${label}</td><td>${formatTime(cum, { alwaysHours: totalSec >= 3600 })}</td><td>${formatTime(cum - prev, { alwaysHours: false })}</td></tr>`);
+        prev = cum;
+        if (d >= totalKm) break;
+      }
+      if (Math.abs(totalKm - (rows.length * intervalKm)) > 0.01 && unit !== 'mile') {
+        rows.push(`<tr><td>${totalKm.toFixed(1)} km (finish)</td><td>${formatTime(totalSec, { alwaysHours: totalSec >= 3600 })}</td><td>${formatTime(totalSec - prev)}</td></tr>`);
+      }
+
+      document.getElementById('splitRows').innerHTML = rows.join('');
+      document.getElementById('results').classList.remove('hidden');
+    });
+  </script>
+</body>
+</html>

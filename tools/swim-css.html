@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Swim CSS Calculator — Driftline</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,600;0,9..144,700&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="tools.css">
+</head>
+<body>
+  <header class="tools-header">
+    <div class="tools-header-inner">
+      <a href="../index.html" class="tools-logo">Drift<span>line</span></a>
+      <nav class="tools-nav">
+        <a href="index.html">Tüm Araçlar</a>
+      </nav>
+    </div>
+  </header>
+
+  <main class="tools-main">
+    <a href="index.html" class="back-link">← Tüm araçlar</a>
+    <div class="tool-page-header">
+      <h1>Swim CSS Calculator</h1>
+      <p>400 m ve 200 m zaman testlerinden Critical Swim Speed — antrenman tempo zonlarınızın temeli.</p>
+    </div>
+
+    <div class="calc-card">
+      <form id="form" class="calc-form">
+        <div class="form-group">
+          <label for="t400">400 m süresi (dk:sn)</label>
+          <input type="text" id="t400" placeholder="6:30" value="6:30" required>
+        </div>
+        <div class="form-group">
+          <label for="t200">200 m süresi (dk:sn)</label>
+          <input type="text" id="t200" placeholder="3:05" value="3:05" required>
+        </div>
+        <button type="submit" class="btn-calc">CSS hesapla</button>
+      </form>
+
+      <div id="results" class="results hidden">
+        <h3>Critical Swim Speed</h3>
+        <div class="result-highlight" id="cssPace">—</div>
+        <div class="result-grid">
+          <div class="result-item">
+            <div class="result-label">CSS (sn/100m)</div>
+            <div class="result-value" id="cssSec">—</div>
+          </div>
+          <div class="result-item">
+            <div class="result-label">CSS (m/sn)</div>
+            <div class="result-value" id="cssSpeed">—</div>
+          </div>
+        </div>
+        <table class="zone-table">
+          <thead><tr><th>Zon</th><th>Tempo /100m</th><th>Açıklama</th></tr></thead>
+          <tbody id="zoneRows"></tbody>
+        </table>
+      </div>
+    </div>
+  </main>
+
+  <footer class="tools-footer">
+    <p>© 2026 Driftline</p>
+  </footer>
+
+  <script src="tools.js"></script>
+  <script>
+    document.getElementById('form').addEventListener('submit', (e) => {
+      e.preventDefault();
+      const t400 = parseTime(document.getElementById('t400').value);
+      const t200 = parseTime(document.getElementById('t200').value);
+      if (!t400 || !t200 || t400 <= t200) {
+        alert('400 m süresi 200 m süresinden uzun olmalıdır.');
+        return;
+      }
+      const secPer100 = swimCSS(t400, t200);
+      document.getElementById('cssPace').textContent = formatTime(secPer100) + ' /100m';
+      document.getElementById('cssSec').textContent = secPer100.toFixed(1) + ' sn';
+      document.getElementById('cssSpeed').textContent = (100 / secPer100).toFixed(2) + ' m/s';
+
+      const zones = [
+        { name: 'Z1 Kolay', offset: 12, desc: 'Isınma, soğuma' },
+        { name: 'Z2 Aerobik', offset: 8, desc: 'Uzun setler' },
+        { name: 'Z3 Tempo', offset: 4, desc: 'Sürdürülebilir efor' },
+        { name: 'Z4 CSS', offset: 0, desc: 'Eşik setleri' },
+        { name: 'Z5 VO₂', offset: -4, desc: 'Kısa interval' },
+      ];
+      document.getElementById('zoneRows').innerHTML = zones.map(z =>
+        `<tr><td>${z.name}</td><td>${formatTime(secPer100 + z.offset)} /100m</td><td>${z.desc}</td></tr>`
+      ).join('');
+      document.getElementById('results').classList.remove('hidden');
+    });
+  </script>
+</body>
+</html>

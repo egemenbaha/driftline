@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>TSS Calculator — Driftline</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,600;0,9..144,700&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="tools.css">
+</head>
+<body>
+  <header class="tools-header">
+    <div class="tools-header-inner">
+      <a href="../index.html" class="tools-logo">Drift<span>line</span></a>
+      <nav class="tools-nav"><a href="index.html">Tüm Araçlar</a></nav>
+    </div>
+  </header>
+
+  <main class="tools-main">
+    <a href="index.html" class="back-link">← Tüm araçlar</a>
+    <div class="tool-page-header">
+      <h1>TSS Calculator</h1>
+      <p>Training Stress Score — antrenman yükünü süre, FTP ve normalize güce göre hesaplayın.</p>
+    </div>
+
+    <div class="calc-card">
+      <form id="form" class="calc-form">
+        <div class="form-group">
+          <label for="ftp">FTP (watt)</label>
+          <input type="number" id="ftp" min="50" max="500" value="200" required>
+        </div>
+        <div class="form-group">
+          <label for="power">Ortalama / NP güç (watt)</label>
+          <input type="number" id="power" min="30" max="600" value="160" required>
+        </div>
+        <div class="form-group">
+          <label for="duration">Süre (dakika)</label>
+          <input type="number" id="duration" min="1" max="600" value="90" required>
+        </div>
+        <button type="submit" class="btn-calc">TSS hesapla</button>
+      </form>
+
+      <div id="results" class="results hidden">
+        <h3>Training Stress Score</h3>
+        <div class="result-highlight" id="tssValue">—</div>
+        <div class="result-grid">
+          <div class="result-item">
+            <div class="result-label">Intensity Factor</div>
+            <div class="result-value" id="ifValue">—</div>
+          </div>
+          <div class="result-item">
+            <div class="result-label">Yorum</div>
+            <div class="result-value" id="comment">—</div>
+          </div>
+        </div>
+        <p class="result-note">TSS ≈ 100, FTP'de 1 saat demektir. Haftalık toplam TSS antrenman yükünüzü takip etmek için kullanılır.</p>
+      </div>
+    </div>
+  </main>
+
+  <footer class="tools-footer"><p>© 2026 Driftline</p></footer>
+
+  <script src="tools.js"></script>
+  <script>
+    document.getElementById('form').addEventListener('submit', (e) => {
+      e.preventDefault();
+      const ftp = parseFloat(document.getElementById('ftp').value);
+      const power = parseFloat(document.getElementById('power').value);
+      const duration = parseFloat(document.getElementById('duration').value);
+      const IF = power / ftp;
+      const tss = tssCalc(duration, ftp, power);
+
+      let comment = 'Hafif';
+      if (tss >= 150) comment = 'Çok zor';
+      else if (tss >= 100) comment = 'Zor';
+      else if (tss >= 60) comment = 'Orta';
+
+      document.getElementById('tssValue').textContent = Math.round(tss);
+      document.getElementById('ifValue').textContent = IF.toFixed(2);
+      document.getElementById('comment').textContent = comment;
+      document.getElementById('results').classList.remove('hidden');
+    });
+  </script>
+</body>
+</html>

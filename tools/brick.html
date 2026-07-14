@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Brick Workouts — Driftline</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,600;0,9..144,700&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="tools.css">
+</head>
+<body>
+  <header class="tools-header">
+    <div class="tools-header-inner">
+      <a href="../index.html" class="tools-logo">Drift<span>line</span></a>
+      <nav class="tools-nav"><a href="index.html">Tüm Araçlar</a></nav>
+    </div>
+  </header>
+
+  <main class="tools-main">
+    <a href="index.html" class="back-link">← Tüm araçlar</a>
+    <div class="tool-page-header">
+      <h1>Brick Workouts</h1>
+      <p>Triatlon için bisiklet + koşu birleşik antrenman önerileri — seviye ve odağa göre.</p>
+    </div>
+
+    <div class="calc-card">
+      <div class="form-group">
+        <label for="level">Seviye</label>
+        <select id="level">
+          <option value="beginner">Başlangıç</option>
+          <option value="intermediate" selected>Orta</option>
+          <option value="advanced">İleri</option>
+        </select>
+      </div>
+      <div class="form-group">
+        <label for="focus">Odak</label>
+        <select id="focus">
+          <option value="adaptation">Geçiş adaptasyonu</option>
+          <option value="race">Yarış simülasyonu</option>
+          <option value="endurance">Dayanıklılık</option>
+          <option value="speed">Hız / tempo</option>
+        </select>
+      </div>
+      <button type="button" class="btn-calc" id="showBtn">Önerileri göster</button>
+
+      <div class="brick-list" id="workouts"></div>
+    </div>
+  </main>
+
+  <footer class="tools-footer"><p>© 2026 Driftline</p></footer>
+
+  <script>
+    const WORKOUTS = {
+      beginner: {
+        adaptation: [
+          { title: 'Kısa geçiş', meta: '45 dk bisiklet + 10 dk koşu', desc: 'Z2 bisiklet, ardından çok kolay koşu. Amaç bacakları koşuya alıştırmak.' },
+          { title: 'Spin + stride', meta: '30 dk + 6×20 sn', desc: 'Rahat spin, koşuda kısa stride\'lar. Toparlanma haftası için ideal.' },
+        ],
+        race: [
+          { title: 'Mini sprint brick', meta: '40 dk Z2 + 15 dk tempo', desc: 'Sakin bisiklet, koşuda yarış temposunun %85–90\'ı.' },
+        ],
+        endurance: [
+          { title: 'Uzun kolay', meta: '60 dk Z2 + 15 dk Z2 koşu', desc: 'Beslenme ve hidrasyon pratiği ile uzun kolay brick.' },
+        ],
+        speed: [
+          { title: 'Kısa tempo', meta: '20 dk ısınma + 3×5 dk tempo + 10 dk koşu', desc: 'Bisiklette kısa tempo blokları, koşuda eşik altı.' },
+        ],
+      },
+      intermediate: {
+        adaptation: [
+          { title: 'Orta geçiş', meta: '75 dk Z2 + 20 dk Z2/Z3', desc: 'Son 15 dk bisiklette Z3, koşuya geçişte bacak ağırlığı hissi.' },
+          { title: 'Çift brick', meta: '50+15, 10 dk ara, 30+10', desc: 'İki kısa brick — yarış geçişlerine adaptasyon.' },
+        ],
+        race: [
+          { title: 'Olimpik sim', meta: '90 dk (son 20 Z3) + 30 dk tempo', desc: 'Yarış beslenme planıyla tam simülasyon.' },
+          { title: 'Negative split run', meta: '80 dk Z2 + 40 dk (son 15 tempo)', desc: 'Koşunun ikinci yarısında tempo artışı.' },
+        ],
+        endurance: [
+          { title: 'Ironman prep', meta: '2.5–3 saat Z2 + 30–45 dk Z2', desc: 'Uzun bisiklet sonrası ağır bacakla koşu dayanıklılığı.' },
+        ],
+        speed: [
+          { title: 'Sweet spot brick', meta: '3×12 dk SS + 5×1 km eşik', desc: 'Bisiklette sweet spot, koşuda km tekrarları.' },
+        ],
+      },
+      advanced: {
+        adaptation: [
+          { title: 'Ağır bacak koşusu', meta: '2 saat Z2 + 45 dk Z2/Z3', desc: 'Ironman geçiş simülasyonu — koşu pacing disiplini.' },
+        ],
+        race: [
+          { title: 'Half IM sim', meta: '2.5 saat (son 30 Z3) + 60 dk (son 20 tempo)', desc: 'Tam yarış beslenme ve pacing testi.' },
+          { title: 'Race pace brick', meta: '60 dk yarış gücü + 8 km tempo', desc: 'Hedef yarış temposunda bisiklet + koşu.' },
+        ],
+        endurance: [
+          { title: 'Big day', meta: '4+ saat bisiklet + 60–90 dk koşu', desc: 'Sezonun en uzun brick\'i — mental ve fiziksel hazırlık.' },
+        ],
+        speed: [
+          { title: 'VO₂ brick', meta: '5×4 dk VO₂ bisiklet + 6×800 m', desc: 'Yüksek yoğunluk — sadece taze iken, sezon başı/orta.' },
+        ],
+      },
+    };
+
+    document.getElementById('showBtn').addEventListener('click', () => {
+      const level = document.getElementById('level').value;
+      const focus = document.getElementById('focus').value;
+      const items = WORKOUTS[level][focus] || [];
+      document.getElementById('workouts').innerHTML = items.map(w =>
+        `<div class="brick-item"><div class="meta">${w.meta}</div><h4>${w.title}</h4><p>${w.desc}</p></div>`
+      ).join('') || '<p>Öneri bulunamadı.</p>';
+    });
+
+    document.getElementById('showBtn').click();
+  </script>
+</body>
+</html>

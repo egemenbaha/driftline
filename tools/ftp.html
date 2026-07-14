@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>FTP Calculator — Driftline</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,600;0,9..144,700&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="tools.css">
+</head>
+<body>
+  <header class="tools-header">
+    <div class="tools-header-inner">
+      <a href="../index.html" class="tools-logo">Drift<span>line</span></a>
+      <nav class="tools-nav"><a href="index.html">Tüm Araçlar</a></nav>
+    </div>
+  </header>
+
+  <main class="tools-main">
+    <a href="index.html" class="back-link">← Tüm araçlar</a>
+    <div class="tool-page-header">
+      <h1>FTP Calculator</h1>
+      <p>20 veya 8 dakikalık maksimum güç testinden Functional Threshold Power ve güç zonları.</p>
+    </div>
+
+    <div class="calc-card">
+      <form id="form" class="calc-form">
+        <div class="form-group">
+          <label for="testType">Test türü</label>
+          <select id="testType">
+            <option value="20">20 dakika testi</option>
+            <option value="8">8 dakika testi</option>
+            <option value="ramp">Ramp testi (son 1 dk ort.)</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label for="avgPower">Ortalama güç (watt)</label>
+          <input type="number" id="avgPower" min="50" max="600" value="220" required>
+        </div>
+        <button type="submit" class="btn-calc">FTP hesapla</button>
+      </form>
+
+      <div id="results" class="results hidden">
+        <h3>Functional Threshold Power</h3>
+        <div class="result-highlight" id="ftpValue">—</div>
+        <table class="zone-table">
+          <thead><tr><th>Zon</th><th>% FTP</th><th>Watt</th><th>Açıklama</th></tr></thead>
+          <tbody id="zoneRows"></tbody>
+        </table>
+      </div>
+    </div>
+  </main>
+
+  <footer class="tools-footer"><p>© 2026 Driftline</p></footer>
+
+  <script src="tools.js"></script>
+  <script>
+    const zoneDefs = [
+      { name: 'Z1 Aktif dinlenme', pct: [0, 55], desc: 'Kolay spin' },
+      { name: 'Z2 Dayanıklılık', pct: [56, 75], desc: 'Uzun ride' },
+      { name: 'Z3 Tempo', pct: [76, 90], desc: 'Sweet spot altı' },
+      { name: 'Z4 Eşik', pct: [91, 105], desc: 'FTP çalışması' },
+      { name: 'Z5 VO₂ max', pct: [106, 120], desc: 'Kısa interval' },
+      { name: 'Z6 An-aerobik', pct: [121, 150], desc: 'Sprint' },
+      { name: 'Z7 Nöromüsküler', pct: [151, 999], desc: 'Max güç' },
+    ];
+
+    document.getElementById('form').addEventListener('submit', (e) => {
+      e.preventDefault();
+      const type = document.getElementById('testType').value;
+      const power = parseFloat(document.getElementById('avgPower').value);
+      const minutes = type === '20' ? 20 : type === '8' ? 8 : 0;
+      const ftp = ftpFromTest(power, minutes);
+      document.getElementById('ftpValue').textContent = Math.round(ftp) + ' W';
+
+      document.getElementById('zoneRows').innerHTML = zoneDefs.map(z => {
+        const lo = Math.round(ftp * z.pct[0] / 100);
+        const hi = z.pct[1] > 200 ? '∞' : Math.round(ftp * z.pct[1] / 100);
+        return `<tr><td>${z.name}</td><td>${z.pct[0]}–${z.pct[1] > 150 ? '150+' : z.pct[1]}%</td><td>${lo}–${hi} W</td><td>${z.desc}</td></tr>`;
+      }).join('');
+      document.getElementById('results').classList.remove('hidden');
+    });
+  </script>
+</body>
+</html>

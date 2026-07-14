@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Pace Converter — Driftline</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,600;0,9..144,700&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="tools.css">
+</head>
+<body>
+  <header class="tools-header">
+    <div class="tools-header-inner">
+      <a href="../index.html" class="tools-logo">Drift<span>line</span></a>
+      <nav class="tools-nav"><a href="index.html">Tüm Araçlar</a></nav>
+    </div>
+  </header>
+
+  <main class="tools-main">
+    <a href="index.html" class="back-link">← Tüm araçlar</a>
+    <div class="tool-page-header">
+      <h1>Pace Converter</h1>
+      <p>dk/km, dk/mil ve km/saat arasında anlık tempo dönüşümü.</p>
+    </div>
+
+    <div class="calc-card">
+      <form id="form" class="calc-form">
+        <div class="form-group">
+          <label for="pace">Tempo (dk:sn /km)</label>
+          <input type="text" id="pace" placeholder="5:00" value="5:00" required>
+        </div>
+        <button type="submit" class="btn-calc">Dönüştür</button>
+      </form>
+
+      <div id="results" class="results hidden">
+        <div class="result-grid">
+          <div class="result-item">
+            <div class="result-label">dk/km</div>
+            <div class="result-value" id="perKm">—</div>
+          </div>
+          <div class="result-item">
+            <div class="result-label">dk/mil</div>
+            <div class="result-value" id="perMile">—</div>
+          </div>
+          <div class="result-item">
+            <div class="result-label">km/saat</div>
+            <div class="result-value" id="kmh">—</div>
+          </div>
+          <div class="result-item">
+            <div class="result-label">mil/saat</div>
+            <div class="result-value" id="mph">—</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <footer class="tools-footer"><p>© 2026 Driftline</p></footer>
+
+  <script src="tools.js"></script>
+  <script>
+    document.getElementById('form').addEventListener('submit', (e) => {
+      e.preventDefault();
+      const secPerKm = parseTime(document.getElementById('pace').value);
+      if (!secPerKm) return;
+
+      const secPerMile = secPerKm * 1.60934;
+      const kmh = 3600 / secPerKm;
+      const mph = kmh / 1.60934;
+
+      document.getElementById('perKm').textContent = formatTime(secPerKm) + ' /km';
+      document.getElementById('perMile').textContent = formatTime(secPerMile) + ' /mil';
+      document.getElementById('kmh').textContent = kmh.toFixed(2) + ' km/s';
+      document.getElementById('mph').textContent = mph.toFixed(2) + ' mil/s';
+      document.getElementById('results').classList.remove('hidden');
+    });
+  </script>
+</body>
+</html>
