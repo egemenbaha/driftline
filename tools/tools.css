@@ -121,3 +121,15 @@ a:focus-visible,button:focus-visible,input:focus-visible,select:focus-visible{ou
 .brick-item h4{font-family:'Fraunces',serif;margin:0 0 8px;font-size:17px;}
 .brick-item p{margin:0;font-size:14px;opacity:0.8;line-height:1.55;}
 .brick-item .meta{font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--coral);margin-bottom:10px;text-transform:uppercase;letter-spacing:0.08em;}
+
+.tools-main.wide{max-width:1100px;}
+.compare-cols{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-top:8px;}
+@media(max-width:700px){.compare-cols{grid-template-columns:1fr;}}
+.compare-col{background:var(--ink);border:1px solid var(--line);border-radius:16px;padding:20px;}
+.compare-col.highlight{border-color:rgba(255,90,70,0.3);}
+.compare-col h3{font-family:'Fraunces',serif;font-size:16px;margin:0 0 12px;}
+.compare-col ul{margin:0;padding-left:18px;line-height:1.75;font-size:14px;opacity:0.85;}
+.compare-table td:first-child{font-weight:500;opacity:0.9;}
+.compare-verdict{margin-top:28px;padding:20px;background:var(--ink);border:1px solid var(--line);border-radius:16px;}
+.compare-verdict h3{font-family:'Fraunces',serif;font-size:17px;margin:0 0 10px;}
+.compare-verdict p{margin:0;font-size:14.5px;line-height:1.65;opacity:0.85;}

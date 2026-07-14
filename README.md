@@ -78,6 +78,7 @@ curl -X POST https://driftline-lovat.vercel.app/api/waitlist \
 - [x] Yasal sayfalar (gizlilik, şartlar)
 - [x] Ücretsiz Araçlar (13 hesaplayıcı)
 - [x] Training Goals (6 hedef sayfası)
+- [x] Compare (11 rakip karşılaştırması)
 - [ ] Analytics
 
 ## Lisans
