@@ -123,14 +123,15 @@ export default async function handler(req, res) {
     return [{ ok: false, error: err.message }];
   });
 
-  const mailFailed = mailResults.some((result) => result && result.ok === false && !result.skipped);
-  if (mailFailed) {
+  const mailSent = mailResults.some((result) => result?.ok);
+  const mailFailed = mailResults.filter((result) => result && result.ok === false && !result.skipped);
+  if (mailFailed.length) {
     console.error("[waitlist] mail results", JSON.stringify(mailResults));
   }
 
   json(res, 200, {
     ok: true,
     message: "Kaydın alındı. 7 günlük denemen için sıradasın — açıldığında ilk seni bilgilendireceğiz.",
-    mailSent: !mailFailed,
+    mailSent,
   });
 }
