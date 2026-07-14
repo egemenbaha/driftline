@@ -18,7 +18,7 @@ function renderComparePage(slug) {
       <p>${c.tagline}</p>
     </div>
     <div class="calc-card">
-      <p style="line-height:1.7;opacity:0.85;margin:0 0 24px">${c.summary}</p>
+      <p style="line-height:1.7;opacity:0.85;margin:0 0 24px">${c.summary}${c.url ? ` <a href="${c.url}" target="_blank" rel="noopener" style="color:var(--coral)">athletedata.health →</a>` : ""}</p>
 
       <div class="compare-cols">
         <div class="compare-col">

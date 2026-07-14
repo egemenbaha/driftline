@@ -79,7 +79,7 @@ curl -X POST https://driftlinescience.com/api/waitlist \
 - [x] Yasal sayfalar (gizlilik, şartlar)
 - [x] Ücretsiz Araçlar (13 hesaplayıcı)
 - [x] Training Goals (6 hedef sayfası)
-- [x] Compare (11 rakip karşılaştırması)
+- [x] Compare (12 rakip karşılaştırması, AthleteData dahil)
 - [ ] Analytics
 
 ## Lisans
