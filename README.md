@@ -8,10 +8,15 @@ Garmin, Strava, WHOOP ve Oura verisini okuyarak antrenman sapmasını sporcu far
 
 | Ortam | URL |
 |-------|-----|
-| **Production (Vercel)** | https://driftline-henna.vercel.app |
+| **Production (Vercel)** | https://driftline-lovat.vercel.app |
 | **GitHub Pages** | https://egemenbaha.github.io/driftline/ |
 
-Vercel team: `driftline-app` (KlarMentor'dan bağımsız).  
+**Vercel hesabı:** `barutcuegemende-7462`  
+**Team:** `driftline-app` (KlarMentor'dan tamamen ayrı — CLI'da kişisel hesap scope'u desteklenmiyor)  
+**Dashboard:** [vercel.com/driftline-app/driftline](https://vercel.com/driftline-app/driftline)
+
+Kişisel hesaba taşımak için: Vercel Dashboard → Project Settings → Transfer Project → Personal Account.
+
 `main` branch'e her push otomatik olarak Vercel'e deploy edilir.
 
 ## Geliştirme
@@ -60,7 +65,7 @@ Form `POST /api/waitlist` endpoint'ine gönderilir.
 Sonra [resend.com/domains](https://resend.com/domains) → Verify.
 
 ```bash
-curl -X POST https://driftline-henna.vercel.app/api/waitlist \
+curl -X POST https://driftline-lovat.vercel.app/api/waitlist \
   -H "Content-Type: application/json" \
   -d '{"email":"test@example.com","sport":"running","platform":"garmin","consent":true}'
 ```

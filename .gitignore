@@ -2,6 +2,8 @@
 .env
 .env.*
 !.env.example
+.env.vercel.backup
 *.log
 node_modules/
 .vercel
+.env*
