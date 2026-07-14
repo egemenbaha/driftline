@@ -1,4 +1,6 @@
 import { put, list } from "@vercel/blob";
+import { sendEmail } from "../lib/mail.js";
+import { waitlistAdminEmail, waitlistConfirmationEmail } from "../lib/emails.js";
 
 const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 const SPORTS = new Set(["running", "triathlon", "cycling", "other"]);
@@ -7,6 +9,35 @@ const PLATFORMS = new Set(["garmin", "strava", "whoop", "oura", "multiple", "oth
 function json(res, status, body) {
   res.status(status).setHeader("Content-Type", "application/json");
   res.end(JSON.stringify(body));
+}
+
+async function notifyWaitlist(entry) {
+  const notifyTo = process.env.WAITLIST_NOTIFY_EMAIL;
+  const results = [];
+
+  const confirmation = waitlistConfirmationEmail(entry);
+  results.push(
+    await sendEmail({
+      to: entry.email,
+      subject: confirmation.subject,
+      html: confirmation.html,
+      text: confirmation.text,
+    }),
+  );
+
+  if (notifyTo) {
+    const admin = waitlistAdminEmail(entry);
+    results.push(
+      await sendEmail({
+        to: notifyTo,
+        subject: admin.subject,
+        html: admin.html,
+        text: admin.text,
+      }),
+    );
+  }
+
+  return results;
 }
 
 export default async function handler(req, res) {
@@ -87,8 +118,12 @@ export default async function handler(req, res) {
     contentType: "application/json",
   });
 
+  const mailResults = await notifyWaitlist(entry).catch((err) => [{ ok: false, error: err.message }]);
+  const mailFailed = mailResults.some((result) => result && result.ok === false && !result.skipped);
+
   json(res, 200, {
     ok: true,
     message: "Kaydın alındı. 7 günlük denemen için sıradasın — açıldığında ilk seni bilgilendireceğiz.",
+    mailSent: !mailFailed,
   });
 }

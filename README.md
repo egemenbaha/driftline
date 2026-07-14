@@ -36,7 +36,20 @@ python3 -m http.server 8080
 
 ## Waitlist API
 
-Form `POST /api/waitlist` endpoint'ine gönderilir. Kayıtlar Vercel Blob (`waitlist/{email}.json`) içinde saklanır.
+Form `POST /api/waitlist` endpoint'ine gönderilir.
+
+- Kayıtlar: Vercel Blob (`waitlist/{email}.json`)
+- E-posta: Resend ile kullanıcıya onay + admin'e bildirim
+
+### Resend env (Vercel)
+
+| Değişken | Örnek |
+|----------|-------|
+| `RESEND_API_KEY` | `re_...` |
+| `MAIL_FROM` | `Driftline <hello@driftline.com>` |
+| `WAITLIST_NOTIFY_EMAIL` | `you@example.com` |
+
+`driftline.com` Resend'de doğrulanmalı. [resend.com/domains](https://resend.com/domains) → Add domain → Cloudflare DNS kayıtlarını ekle → Verify.
 
 ```bash
 curl -X POST https://driftline-henna.vercel.app/api/waitlist \
