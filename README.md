@@ -52,18 +52,18 @@ Form `POST /api/waitlist` endpoint'ine gönderilir.
 | Değişken | Örnek |
 |----------|-------|
 | `RESEND_API_KEY` | `re_...` |
-| `MAIL_FROM` | `Driftline <hello@driftline.com>` |
+| `MAIL_FROM` | `Driftline <hello@driftlinescience.com>` |
 | `WAITLIST_NOTIFY_EMAIL` | `you@example.com` |
 
-`driftline.com` Resend'de eklendi (physik567@gmail.com hesabı). Cloudflare DNS'e şu kayıtları ekle:
+`driftlinescience.com` Resend'de eklendi (Vercel DNS üzerinden). Kayıtlar otomatik ayarlandı:
 
 | Tip | Ad | Değer |
 |-----|-----|-------|
-| TXT | `resend._domainkey` | `p=MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQDC0fM9Ys3ROw4Dlt10MKZHqS/2mkbptrK7gpChJQp1oXGhjpjs3ha7wG77sx674m7BEroZliHttn23PhN6otwx0XEHpmdJIzeifAbTBWxbDDEjHTCWsx0BSjhMzYUEinwjZJqxyY8/ZYaysAUONp+3QsaPOF/KcgarR5PW7dVP2wIDAQAB` |
+| TXT | `resend._domainkey` | DKIM public key (Resend dashboard) |
 | MX | `send` | `feedback-smtp.eu-west-1.amazonses.com` (priority 10) |
 | TXT | `send` | `v=spf1 include:amazonses.com ~all` |
 
-Sonra [resend.com/domains](https://resend.com/domains) → Verify.
+Doğrulama: [resend.com/domains](https://resend.com/domains) → Verify (DNS yayılımı 1–15 dk sürebilir).
 
 ```bash
 curl -X POST https://driftlinescience.com/api/waitlist \
