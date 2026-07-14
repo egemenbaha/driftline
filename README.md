@@ -70,7 +70,7 @@ curl -X POST https://driftline-henna.vercel.app/api/waitlist \
 - [x] Waitlist / kayıt formu
 - [x] Mobil hamburger menü
 - [ ] SEO (meta, OG, sitemap)
-- [ ] Yasal sayfalar (gizlilik, şartlar, KVKK)
+- [x] Yasal sayfalar (gizlilik, şartlar)
 - [ ] Analytics
 
 ## Lisans
