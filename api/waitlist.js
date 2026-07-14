@@ -118,8 +118,15 @@ export default async function handler(req, res) {
     contentType: "application/json",
   });
 
-  const mailResults = await notifyWaitlist(entry).catch((err) => [{ ok: false, error: err.message }]);
+  const mailResults = await notifyWaitlist(entry).catch((err) => {
+    console.error("[waitlist] mail error", err);
+    return [{ ok: false, error: err.message }];
+  });
+
   const mailFailed = mailResults.some((result) => result && result.ok === false && !result.skipped);
+  if (mailFailed) {
+    console.error("[waitlist] mail results", JSON.stringify(mailResults));
+  }
 
   json(res, 200, {
     ok: true,
