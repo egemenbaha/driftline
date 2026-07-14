@@ -222,6 +222,21 @@
   .testi-grid{display:grid; grid-template-columns:repeat(3,1fr); gap:26px; margin-top:52px;}
   @media (max-width:900px){ .testi-grid{grid-template-columns:1fr 1fr;} }
   @media (max-width:620px){ .testi-grid{grid-template-columns:1fr;} }
+
+  /* ---------- GOALS ---------- */
+  .goals-grid{display:grid; grid-template-columns:repeat(3,1fr); gap:16px; margin-top:52px;}
+  @media (max-width:900px){ .goals-grid{grid-template-columns:repeat(2,1fr);} }
+  @media (max-width:520px){ .goals-grid{grid-template-columns:1fr;} }
+  .goal-card{
+    background:var(--ink-2); border:1px solid var(--line); border-radius:18px; padding:24px;
+    text-decoration:none; color:inherit; transition:border-color .2s, transform .15s; display:block;
+  }
+  .goal-card:hover{border-color:rgba(255,90,70,0.35); transform:translateY(-2px);}
+  .goal-card .icon{font-size:24px; margin-bottom:10px;}
+  .goal-card h3{font-family:'Fraunces',serif; font-weight:500; font-size:17px; margin:0 0 8px;}
+  .goal-card p{font-size:14px; opacity:0.7; line-height:1.55; margin:0;}
+  .goals-more{margin-top:28px; font-size:14px; opacity:0.75;}
+  .goals-more a{color:var(--coral); text-decoration:none; font-weight:600;}
   .testi{background:var(--ink-2); border:1px solid var(--line); border-radius:16px; padding:24px;}
   .testi p{font-size:14.5px; line-height:1.65; margin:0 0 16px; opacity:0.9;}
   .testi .who{font-family:'JetBrains Mono',monospace; font-size:12px; opacity:0.55;}
@@ -322,6 +337,7 @@
       <li><a href="#steps">Nasıl çalışır</a></li>
       <li><a href="#pricing">Fiyat</a></li>
       <li><a href="tools/index.html">Araçlar</a></li>
+      <li><a href="goals/index.html">Hedefler</a></li>
       <li><a href="#signup">Kayıt</a></li>
       <li><a href="#faq">SSS</a></li>
     </ul></nav>
@@ -343,6 +359,7 @@
       <li><a href="#steps" data-menu-close>Nasıl çalışır</a></li>
       <li><a href="#pricing" data-menu-close>Fiyat</a></li>
       <li><a href="tools/index.html" data-menu-close>Araçlar</a></li>
+      <li><a href="goals/index.html" data-menu-close>Hedefler</a></li>
       <li><a href="#signup" data-menu-close>Kayıt</a></li>
       <li><a href="#faq" data-menu-close>SSS</a></li>
     </ul></nav>
@@ -469,6 +486,21 @@
   </div>
 </section>
 
+<section id="goals">
+  <div class="eyebrow">Training Goals</div>
+  <h2 class="section-title">Hedefin ne olursa olsun, plan sana göre.</h2>
+  <p class="section-sub">Driftline antrenman hedefini öğrenir ve HRV, tempo, uyku verisine göre planı her gün yeniden yazar.</p>
+  <div class="goals-grid">
+    <a href="goals/weight-loss.html" class="goal-card"><div class="icon">🔥</div><h3>Weight Loss</h3><p>Kalori açığında güvenli hacim — aşırı yüklenmeden yağ yakımı.</p></a>
+    <a href="goals/endurance.html" class="goal-card"><div class="icon">💪</div><h3>Endurance</h3><p>Aerobik taban ve uzun antrenmanlar için akıllı periodizasyon.</p></a>
+    <a href="goals/race-preparation.html" class="goal-card"><div class="icon">🏁</div><h3>Race Preparation</h3><p>Build, peak ve taper — yarış gününe kadar otomatik ayar.</p></a>
+    <a href="goals/injury-recovery.html" class="goal-card"><div class="icon">🩹</div><h3>Injury Recovery</h3><p>Sakatlık sonrası kademeli dönüş, toparlanma öncelikli.</p></a>
+    <a href="goals/body-recomposition.html" class="goal-card"><div class="icon">⚡</div><h3>Body Recomposition</h3><p>Kas koruyarak form — zon 2, güç ve beslenme dengesi.</p></a>
+    <a href="goals/beginner-fitness.html" class="goal-card"><div class="icon">🌱</div><h3>Beginner Fitness</h3><p>Sıfırdan güvenli başlangıç, tutarlılık odaklı ilerleme.</p></a>
+  </div>
+  <p class="goals-more"><a href="goals/index.html">Tüm hedefleri gör →</a></p>
+</section>
+
 <section id="pricing">
   <div class="eyebrow">Fiyatlandırma</div>
   <h2 class="section-title">Tek plan, ilk hafta ücretsiz.</h2>
@@ -531,6 +563,18 @@
           </select>
         </div>
       </div>
+      <div class="field">
+        <label for="goal">Antrenman hedefi</label>
+        <select id="goal" name="goal" required>
+          <option value="">Seç</option>
+          <option value="weight-loss">Weight Loss</option>
+          <option value="endurance">Endurance</option>
+          <option value="race-preparation">Race Preparation</option>
+          <option value="injury-recovery">Injury Recovery</option>
+          <option value="body-recomposition">Body Recomposition</option>
+          <option value="beginner-fitness">Beginner Fitness</option>
+        </select>
+      </div>
       <label class="consent">
         <input type="checkbox" id="consent" name="consent" required>
         <span>Kişisel verilerimin waitlist ve erken erişim bildirimleri için işlenmesini kabul ediyorum. <a href="privacy.html" style="color:var(--coral);">Gizlilik Politikası</a></span>
@@ -580,6 +624,7 @@
       <li><a href="#signals">Sinyaller</a></li>
       <li><a href="#pricing">Fiyat</a></li>
       <li><a href="tools/index.html">Ücretsiz Araçlar</a></li>
+      <li><a href="goals/index.html">Training Goals</a></li>
       <li><a href="#signup">Kayıt</a></li>
       <li><a href="#faq">SSS</a></li>
     </ul>
@@ -687,13 +732,15 @@
     var email = form.email;
     var sport = form.sport;
     var platform = form.platform;
+    var goal = form.goal;
     var consent = form.consent;
 
     setInvalid(email, !email.value.trim());
     setInvalid(sport, !sport.value);
     setInvalid(platform, !platform.value);
+    setInvalid(goal, !goal.value);
 
-    if (!email.value.trim() || !sport.value || !platform.value || !consent.checked) {
+    if (!email.value.trim() || !sport.value || !platform.value || !goal.value || !consent.checked) {
       setMsg("Lütfen tüm alanları doldur ve KVKK onayını işaretle.", "err");
       return;
     }
@@ -709,6 +756,7 @@
           email: email.value.trim(),
           sport: sport.value,
           platform: platform.value,
+          goal: goal.value,
           consent: consent.checked,
           website: form.website.value
         })
@@ -723,7 +771,7 @@
 
       setMsg(data.message || "Kaydın alındı.", "ok");
       form.reset();
-      [email, sport, platform].forEach(function (el) { setInvalid(el, false); });
+      [email, sport, platform, goal].forEach(function (el) { setInvalid(el, false); });
     } catch (err) {
       setMsg("Bağlantı hatası. Lütfen tekrar dene.", "err");
     } finally {

@@ -5,6 +5,14 @@ import { waitlistAdminEmail, waitlistConfirmationEmail } from "../lib/emails.js"
 const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 const SPORTS = new Set(["running", "triathlon", "cycling", "other"]);
 const PLATFORMS = new Set(["garmin", "strava", "whoop", "oura", "multiple", "other"]);
+const GOALS = new Set([
+  "weight-loss",
+  "endurance",
+  "race-preparation",
+  "injury-recovery",
+  "body-recomposition",
+  "beginner-fitness",
+]);
 
 function json(res, status, body) {
   res.status(status).setHeader("Content-Type", "application/json");
@@ -68,6 +76,7 @@ export default async function handler(req, res) {
   const email = String(body?.email ?? "").trim().toLowerCase();
   const sport = String(body?.sport ?? "").trim();
   const platform = String(body?.platform ?? "").trim();
+  const goal = String(body?.goal ?? "").trim();
   const consent = Boolean(body?.consent);
   const honeypot = String(body?.website ?? "").trim();
 
@@ -91,6 +100,11 @@ export default async function handler(req, res) {
     return;
   }
 
+  if (!GOALS.has(goal)) {
+    json(res, 400, { ok: false, message: "Antrenman hedefini seç." });
+    return;
+  }
+
   if (!consent) {
     json(res, 400, { ok: false, message: "Devam etmek için KVKK onayı gerekli." });
     return;
@@ -107,6 +121,7 @@ export default async function handler(req, res) {
     email,
     sport,
     platform,
+    goal,
     consent,
     source: "landing",
     createdAt: new Date().toISOString(),

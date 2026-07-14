@@ -67,7 +67,7 @@ Sonra [resend.com/domains](https://resend.com/domains) → Verify.
 ```bash
 curl -X POST https://driftline-lovat.vercel.app/api/waitlist \
   -H "Content-Type: application/json" \
-  -d '{"email":"test@example.com","sport":"running","platform":"garmin","consent":true}'
+  -d '{"email":"test@example.com","sport":"running","platform":"garmin","goal":"endurance","consent":true}'
 ```
 
 ## Yol haritası
@@ -76,6 +76,8 @@ curl -X POST https://driftline-lovat.vercel.app/api/waitlist \
 - [x] Mobil hamburger menü
 - [ ] SEO (meta, OG, sitemap)
 - [x] Yasal sayfalar (gizlilik, şartlar)
+- [x] Ücretsiz Araçlar (13 hesaplayıcı)
+- [x] Training Goals (6 hedef sayfası)
 - [ ] Analytics
 
 ## Lisans
