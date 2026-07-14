@@ -65,7 +65,7 @@ export default async function handler(req, res) {
     return;
   }
 
-  const existing = await list({ prefix: "waitlist/", limit: 1000 });
+  const existing = await list({ prefix: "waitlist/", limit: 1000, access: "private" });
   const duplicate = existing.blobs.some((blob) => blob.pathname === `waitlist/${email}.json`);
   if (duplicate) {
     json(res, 409, { ok: false, message: "Bu e-posta zaten waitlist'te." });
