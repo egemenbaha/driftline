@@ -30,10 +30,22 @@
   .display{font-family:'Fraunces',serif;}
 
   a{color:inherit;}
+  a:focus-visible, button:focus-visible, summary:focus-visible, input:focus-visible, select:focus-visible{
+    outline:2px solid var(--coral); outline-offset:3px;
+  }
+
+  .skip-link{
+    position:absolute; left:-9999px; top:auto; width:1px; height:1px; overflow:hidden;
+  }
+  .skip-link:focus{
+    left:16px; top:16px; width:auto; height:auto; overflow:visible; z-index:200;
+    background:var(--coral); color:var(--ink); padding:10px 16px; border-radius:100px;
+    font-size:14px; font-weight:600; text-decoration:none;
+  }
 
   /* ---------- NAV ---------- */
   header{
-    position:sticky; top:0; z-index:50;
+    position:sticky; top:0; z-index:100;
     display:flex; align-items:center; justify-content:space-between;
     padding:20px 6vw;
     background:rgba(11,18,32,0.86);
@@ -43,12 +55,64 @@
   .logo{
     font-family:'Fraunces',serif; font-weight:600; font-style:italic;
     font-size:22px; letter-spacing:0.01em; display:flex; align-items:center; gap:10px;
+    text-decoration:none; color:inherit; z-index:101;
   }
   .logo svg{width:22px;height:22px;flex:none;}
   nav ul{list-style:none; display:flex; gap:32px; margin:0; padding:0;}
   nav a{text-decoration:none; font-size:14px; color:var(--paper); opacity:0.75; transition:opacity .2s;}
-  nav a:hover{opacity:1;}
+  nav a:hover, nav a[aria-current="page"]{opacity:1;}
   .navlinks{display:flex; align-items:center; gap:36px;}
+  .header-ctas{display:flex; align-items:center; gap:14px;}
+
+  .menu-toggle{
+    display:none; position:relative; z-index:101;
+    width:44px; height:44px; padding:0; border:1px solid var(--line); border-radius:12px;
+    background:var(--ink-2); cursor:pointer; color:var(--paper);
+    align-items:center; justify-content:center; flex-direction:column; gap:5px;
+  }
+  .menu-toggle span{
+    display:block; width:18px; height:2px; background:var(--paper); border-radius:2px;
+    transition:transform .2s ease, opacity .2s ease;
+  }
+  .menu-toggle[aria-expanded="true"] span:nth-child(1){transform:translateY(7px) rotate(45deg);}
+  .menu-toggle[aria-expanded="true"] span:nth-child(2){opacity:0;}
+  .menu-toggle[aria-expanded="true"] span:nth-child(3){transform:translateY(-7px) rotate(-45deg);}
+
+  .mobile-menu{
+    position:fixed; inset:0; z-index:90; pointer-events:none; visibility:hidden;
+  }
+  .mobile-menu.is-open{pointer-events:auto; visibility:visible;}
+  .mobile-menu__backdrop{
+    position:absolute; inset:0; background:rgba(11,18,32,0.72); opacity:0;
+    transition:opacity .25s ease;
+  }
+  .mobile-menu.is-open .mobile-menu__backdrop{opacity:1;}
+  .mobile-menu__panel{
+    position:absolute; top:0; right:0; width:min(88vw, 360px); height:100%;
+    background:var(--ink-2); border-left:1px solid var(--line);
+    padding:96px 28px 32px; display:flex; flex-direction:column; gap:28px;
+    transform:translateX(100%); transition:transform .28s ease;
+    overflow-y:auto;
+  }
+  .mobile-menu.is-open .mobile-menu__panel{transform:translateX(0);}
+  .mobile-menu nav ul{flex-direction:column; gap:0;}
+  .mobile-menu nav a{
+    display:block; padding:16px 0; font-size:18px; font-family:'Fraunces',serif;
+    border-bottom:1px solid var(--line); opacity:0.9;
+  }
+  .mobile-menu .header-ctas{flex-direction:column; align-items:stretch; gap:12px;}
+  .mobile-menu .header-ctas .cta{text-align:center;}
+
+  body.menu-open{overflow:hidden;}
+
+  @media (max-width:900px){
+    .navlinks{display:none;}
+    .menu-toggle{display:inline-flex;}
+  }
+  @media (prefers-reduced-motion:reduce){
+    .mobile-menu__backdrop, .mobile-menu__panel, .menu-toggle span{transition:none;}
+  }
+
   .cta{
     font-family:'Inter',sans-serif; font-weight:600; font-size:14px;
     background:var(--coral); color:var(--ink); border:none;
@@ -233,24 +297,49 @@
 </head>
 <body>
 
+<a class="skip-link" href="#main">İçeriğe atla</a>
+
 <header>
-  <div class="logo">
-    <svg viewBox="0 0 24 24" fill="none"><path d="M2 13c2 0 2-6 4-6s2 10 4 10 2-14 4-14 2 10 4 10 2-6 4-6" stroke="#FF5A46" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+  <a class="logo" href="#main" aria-label="Driftline ana sayfa">
+    <svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M2 13c2 0 2-6 4-6s2 10 4 10 2-14 4-14 2 10 4 10 2-6 4-6" stroke="#FF5A46" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
     driftline
-  </div>
+  </a>
   <div class="navlinks">
-    <nav><ul>
+    <nav aria-label="Ana menü"><ul>
       <li><a href="#signals">Ürün</a></li>
       <li><a href="#steps">Nasıl çalışır</a></li>
       <li><a href="#pricing">Fiyat</a></li>
       <li><a href="#signup">Kayıt</a></li>
       <li><a href="#faq">SSS</a></li>
     </ul></nav>
-    <a class="cta ghost" href="https://app.driftline.com/login">Giriş yap</a>
-    <a class="cta" href="#signup">Koçunla tanış</a>
+    <div class="header-ctas">
+      <a class="cta ghost" href="https://app.driftline.com/login">Giriş yap</a>
+      <a class="cta" href="#signup">Koçunla tanış</a>
+    </div>
   </div>
+  <button class="menu-toggle" type="button" aria-expanded="false" aria-controls="mobile-menu" aria-label="Menüyü aç">
+    <span></span><span></span><span></span>
+  </button>
 </header>
 
+<div id="mobile-menu" class="mobile-menu" aria-hidden="true">
+  <div class="mobile-menu__backdrop" data-menu-close></div>
+  <div class="mobile-menu__panel" role="dialog" aria-modal="true" aria-label="Menü">
+    <nav aria-label="Mobil menü"><ul>
+      <li><a href="#signals" data-menu-close>Ürün</a></li>
+      <li><a href="#steps" data-menu-close>Nasıl çalışır</a></li>
+      <li><a href="#pricing" data-menu-close>Fiyat</a></li>
+      <li><a href="#signup" data-menu-close>Kayıt</a></li>
+      <li><a href="#faq" data-menu-close>SSS</a></li>
+    </ul></nav>
+    <div class="header-ctas">
+      <a class="cta ghost" href="https://app.driftline.com/login" data-menu-close>Giriş yap</a>
+      <a class="cta" href="#signup" data-menu-close>Koçunla tanış</a>
+    </div>
+  </div>
+</div>
+
+<main id="main">
 <section class="hero">
   <svg class="hero-wave" viewBox="0 0 1400 500" preserveAspectRatio="none">
     <path d="M0,320 C150,260 250,380 400,300 C550,220 650,340 800,280 C950,220 1050,300 1200,260 C1300,235 1350,255 1400,240" stroke="#8FA98C" stroke-width="1.5" fill="none" opacity="0.5"/>
@@ -464,6 +553,7 @@
     </details>
   </div>
 </section>
+</main>
 
 <footer>
   <div class="flogo">driftline</div>
@@ -471,6 +561,66 @@
 </footer>
 
 <script>
+(function () {
+  var toggle = document.querySelector(".menu-toggle");
+  var menu = document.getElementById("mobile-menu");
+  var panel = menu && menu.querySelector(".mobile-menu__panel");
+  var focusable = "a[href], button:not([disabled]), input:not([disabled]), select:not([disabled])";
+
+  function openMenu() {
+    if (!menu || !toggle) return;
+    menu.classList.add("is-open");
+    menu.setAttribute("aria-hidden", "false");
+    toggle.setAttribute("aria-expanded", "true");
+    toggle.setAttribute("aria-label", "Menüyü kapat");
+    document.body.classList.add("menu-open");
+    var first = panel && panel.querySelector(focusable);
+    if (first) first.focus();
+  }
+
+  function closeMenu() {
+    if (!menu || !toggle) return;
+    menu.classList.remove("is-open");
+    menu.setAttribute("aria-hidden", "true");
+    toggle.setAttribute("aria-expanded", "false");
+    toggle.setAttribute("aria-label", "Menüyü aç");
+    document.body.classList.remove("menu-open");
+    toggle.focus();
+  }
+
+  if (toggle && menu) {
+    toggle.addEventListener("click", function () {
+      if (menu.classList.contains("is-open")) closeMenu();
+      else openMenu();
+    });
+
+    menu.querySelectorAll("[data-menu-close]").forEach(function (el) {
+      el.addEventListener("click", closeMenu);
+    });
+
+    document.addEventListener("keydown", function (e) {
+      if (e.key === "Escape" && menu.classList.contains("is-open")) closeMenu();
+      if (e.key === "Tab" && menu.classList.contains("is-open") && panel) {
+        var items = panel.querySelectorAll(focusable);
+        if (!items.length) return;
+        var first = items[0];
+        var last = items[items.length - 1];
+        if (e.shiftKey && document.activeElement === first) {
+          e.preventDefault();
+          last.focus();
+        } else if (!e.shiftKey && document.activeElement === last) {
+          e.preventDefault();
+          first.focus();
+        }
+      }
+    });
+
+    window.addEventListener("resize", function () {
+      if (window.innerWidth > 900 && menu.classList.contains("is-open")) closeMenu();
+    });
+  }
+})();
+
 (function () {
   var form = document.getElementById("waitlist-form");
   var msg = document.getElementById("form-msg");

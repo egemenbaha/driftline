@@ -68,7 +68,7 @@ curl -X POST https://driftline-henna.vercel.app/api/waitlist \
 ## Yol haritası
 
 - [x] Waitlist / kayıt formu
-- [ ] Mobil hamburger menü
+- [x] Mobil hamburger menü
 - [ ] SEO (meta, OG, sitemap)
 - [ ] Yasal sayfalar (gizlilik, şartlar, KVKK)
 - [ ] Analytics
