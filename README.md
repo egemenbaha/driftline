@@ -1,79 +1,49 @@
-# Driftline
+# ⚠️ Legacy static archive
 
-Proaktif AI antrenman koçu landing page.
+**This repository is not the production source of Driftline.**
 
-Garmin, Strava, WHOOP ve Oura verisini okuyarak antrenman sapmasını sporcu fark etmeden yakalar; planı günceller ve WhatsApp üzerinden bildirir.
+It is kept only as a **historical / static prototype** (early HTML landing pages, tools, and compare content). Do not treat pushes here as production deploys. Do not use this repo for day-to-day product development.
 
-## Canlı URL'ler
+| What | Where |
+|------|--------|
+| **Active product (production)** | https://driftlinescience.com |
+| **Active source repository** | [egemenbaha/driftline-science](https://github.com/egemenbaha/driftline-science) |
+| **Active Vercel project** | `driftline-app/driftline-science` |
 
-| Ortam | URL |
-|-------|-----|
-| **Production (Vercel)** | https://driftlinescience.com |
-| **Vercel fallback** | https://driftline-lovat.vercel.app |
-| **GitHub Pages** | https://egemenbaha.github.io/driftline/ |
+GitHub Pages for this repo is disabled. The legacy Vercel project `driftline-app/driftline` is disconnected from Git and is not production.
 
-**Vercel hesabı:** `barutcuegemende-7462`  
-**Team:** `driftline-app` (KlarMentor'dan tamamen ayrı — CLI'da kişisel hesap scope'u desteklenmiyor)  
-**Dashboard:** [vercel.com/driftline-app/driftline](https://vercel.com/driftline-app/driftline)
+---
 
-Kişisel hesaba taşımak için: Vercel Dashboard → Project Settings → Transfer Project → Personal Account.
+# Driftline (archive)
 
-`main` branch'e her push otomatik olarak Vercel'e deploy edilir.
+Proaktif AI antrenman koçu — early static landing page prototype.
 
-## Geliştirme
+Garmin, Strava, WHOOP ve Oura verisini okuyarak antrenman sapmasını sporcu fark etmeden yakalar; planı günceller ve WhatsApp üzerinden bildirir. *(Product vision — implemented on the active Next.js app, not in this static archive.)*
 
-Statik HTML — bağımlılık yok.
+## Local preview (archive only)
+
+Statik HTML — bağımlılık yok. Bu yalnızca arşiv kodunu yerelde açmak içindir; production deploy yolu değildir.
 
 ```bash
-# Yerel önizleme
 python3 -m http.server 8080
 # http://localhost:8080
 ```
 
-## driftline.com domain
+## Historical notes (not current runbooks)
 
-`driftline.com` başka bir Vercel context'inde kayıtlı. `driftline-app` team'ine bağlamak için:
+The sections below are **historical documentation** from the early static/Vercel prototype era. They are **not** instructions for operating production today.
 
-1. Eski Vercel hesabından domain ownership'i kaldır veya `vercel domains move driftline.com driftline-app` ile transfer et
-2. Cloudflare DNS:
-   - `A` → `76.76.21.21`
-   - `CNAME` `www` → `cname.vercel-dns.com`
-3. Vercel → driftline-app/driftline → Domains → `driftline.com` ekle
+### Historical: waitlist / email (superseded)
 
-## Waitlist API
+Production waitlist and email now run on **`driftline-app/driftline-science`**. Environment variables and DNS for mail live on that project / the team domain zone — not via this repository.
 
-Form `POST /api/waitlist` endpoint'ine gönderilir.
+### Historical: old domain / deploy ideas (do not follow)
 
-- Kayıtlar: Vercel Blob (`waitlist/{email}.json`)
-- E-posta: Resend ile kullanıcıya onay + admin'e bildirim
+Earlier notes about transferring `driftline.com`, Cloudflare A/CNAME recipes for this static project, “push `main` → production deploy” on the legacy Vercel project, and project transfer to a personal account are **obsolete**. Production is Git-based on `egemenbaha/driftline-science` → Vercel `driftline-science`.
 
-### Resend env (Vercel)
+## Yol haritası (archive snapshot)
 
-| Değişken | Örnek |
-|----------|-------|
-| `RESEND_API_KEY` | `re_...` |
-| `MAIL_FROM` | `Driftline <hello@driftlinescience.com>` |
-| `WAITLIST_NOTIFY_EMAIL` | `you@example.com` |
-
-`driftlinescience.com` Resend'de eklendi (Vercel DNS üzerinden). Kayıtlar otomatik ayarlandı:
-
-| Tip | Ad | Değer |
-|-----|-----|-------|
-| TXT | `resend._domainkey` | DKIM public key (Resend dashboard) |
-| MX | `send` | `feedback-smtp.eu-west-1.amazonses.com` (priority 10) |
-| TXT | `send` | `v=spf1 include:amazonses.com ~all` |
-
-Doğrulama: [resend.com/domains](https://resend.com/domains) → Verify (DNS yayılımı 1–15 dk sürebilir).
-
-```bash
-curl -X POST https://driftlinescience.com/api/waitlist \
-  -H "Content-Type: application/json" \
-  -d '{"email":"test@example.com","sport":"running","platform":"garmin","goal":"endurance","consent":true}'
-```
-
-## Yol haritası
-
-- [x] Waitlist / kayıt formu
+- [x] Waitlist / kayıt formu *(prototype era)*
 - [x] Mobil hamburger menü
 - [ ] SEO (meta, OG, sitemap)
 - [x] Yasal sayfalar (gizlilik, şartlar)
@@ -81,6 +51,8 @@ curl -X POST https://driftlinescience.com/api/waitlist \
 - [x] Training Goals (6 hedef sayfası)
 - [x] Compare (12 rakip karşılaştırması, AthleteData dahil)
 - [ ] Analytics
+
+Active product roadmap lives in the science repository / product process — not here.
 
 ## Lisans
 
